@@ -1,3 +1,8 @@
 /Memory.class
+<<<<<<< HEAD
 /JobScheduler.class
 /JobQueueLoader.class
+=======
+/Process.class
+/Process$processFinalStatus.class
+>>>>>>> bc1e52a6cb6357855f284ed3a56b93f948f3f611
