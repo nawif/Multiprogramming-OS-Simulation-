@@ -15,7 +15,20 @@ public class Memory {
 		unsortedProcesses.sort((p1, p2) -> {
 			return p1.getCPUBurstTime() < p2.getCPUBurstTime() ? 1:-1;
 		});
-		readyQueue.addAll(unsortedProcesses);
+		addToReadyQueue(unsortedProcesses);
+	}
+
+	private void addToReadyQueue(List<Process> unsortedProcesses) {
+		for (Process process : unsortedProcesses) {
+			if(canAdd(process.getMemoryRequired())) {
+				readyQueue.add(process);
+				unsortedProcesses.remove(process);
+			}
+		}
+	}
+
+	private boolean canAdd(int jobSize) {
+		return (MAX_SIZE*0.9 <= alocatedMemorySize + jobSize);
 	}
 	
 }

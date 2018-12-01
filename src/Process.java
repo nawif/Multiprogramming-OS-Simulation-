@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class Process {
 
@@ -11,7 +12,7 @@ public class Process {
 	private int numOfTimeInWating; //Number of times it was waiting for memory 
 	private long executionTime; //Time it terminated or was killed
 	private processFinalStatus fState; //Its final state Killed or Terminated
-	private int CPUBurstTime;
+	private List<Pair<taskValue,Integer>> tasks;
 	
 
 	
@@ -137,7 +138,7 @@ public void setpId(int pId) {
 
 public Process(int pId, String pName, long timeLoadedIntoCPU, int numOfTimeInCpu, long totTimeSpentInCPU,
 			int numOfTimePerCPU, long totTimeSpentPerIO, int numOfTimeInWating, long executionTime,
-			processFinalStatus fState, int CPUBurstTime) {
+			processFinalStatus fState, int CPUBurstTime, int memoryRequired) {
 		
 		this.pId = pId;
 		this.pName = pName;
@@ -150,6 +151,7 @@ public Process(int pId, String pName, long timeLoadedIntoCPU, int numOfTimeInCpu
 		this.executionTime = executionTime;
 		this.fState = fState;
 		this.CPUBurstTime=CPUBurstTime;
+		this.memoryRequired=memoryRequired;
 	}
 
 
@@ -166,8 +168,23 @@ public void setCPUBurstTime(int cPUBurstTime) {
 
 
 
+	public int getMemoryRequired() {
+	return memoryRequired;
+}
+
+
+
+public void setMemoryRequired(int memoryRequired) {
+	this.memoryRequired = memoryRequired;
+}
+
+
+
 	enum processFinalStatus{
 		KILLED, TERMINATED;
 		
+	}
+	enum taskValue{
+		CPU,IO,MEMORY;
 	}
 }
