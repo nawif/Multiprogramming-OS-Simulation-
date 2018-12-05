@@ -1,6 +1,6 @@
-import java.util.List;
+import java.util.*;
 
-public class Process {
+public class Process implements Comparable<Process> {
 
 	private int pId; //Process ID
 	private String pName; //Program name
@@ -12,22 +12,59 @@ public class Process {
 	private int numOfTimeInWating; //Number of times it was waiting for memory 
 	private long executionTime; //Time it terminated or was killed
 	private processFinalStatus fState; //Its final state Killed or Terminated
-	private List<Pair<taskValue,Integer>> tasks;
+	private Queue<Pair<String,Integer>> tasks;
+	private int alocatedMemory;
 	
-
 	
-public int getpId() {
+	
+	public Process(int id, Queue<Pair<String,Integer>> tasks) {
+		pId=id;
+		this.tasks=tasks;
+		setAlocatedMemory(0);
+	}
+	
+	public Pair<String, Integer> getNextMemory() {
+		for (Pair<String, Integer> pair : tasks) {
+			if(pair.getFirst().equals("memory"))
+				return pair;
+		}
+		return null;
+	}
+	
+	public int getNextBurst() {
+		for (Pair<String, Integer> pair : tasks) {
+			if(pair.getFirst().equals("cpu"))
+				return pair.getSecond();
+		}
+		return 0;
+	}
+	
+	public void deleteTask(Pair<String, Integer> task) {
+		tasks.remove(task);
+	}
+	
+	public String getFeatures() {
+		StringBuilder str = new StringBuilder();
+		for (Pair<String, Integer> pair : tasks) {
+//			str.append(pair.getFirst());
+			str.append(pair.getSecond());
+			str.append("\t");
+		}
+		return pId+"\t"+str.toString();
+	}
+	
+	public int getpId() {
 		return pId;
 	}
-
-
-
+	
+	
+	
 	public String getpName() {
 		return pName;
 	}
 
 
-
+	
 	public long getTimeLoadedIntoCPU() {
 		return timeLoadedIntoCPU;
 	}
@@ -136,55 +173,26 @@ public void setpId(int pId) {
 
 
 
-public Process(int pId, String pName, long timeLoadedIntoCPU, int numOfTimeInCpu, long totTimeSpentInCPU,
-			int numOfTimePerCPU, long totTimeSpentPerIO, int numOfTimeInWating, long executionTime,
-			processFinalStatus fState, int CPUBurstTime, int memoryRequired) {
-		
-		this.pId = pId;
-		this.pName = pName;
-		this.timeLoadedIntoCPU = timeLoadedIntoCPU;
-		this.numOfTimeInCpu = numOfTimeInCpu;
-		this.totTimeSpentInCPU = totTimeSpentInCPU;
-		this.numOfTimePerCPU = numOfTimePerCPU;
-		this.totTimeSpentPerIO = totTimeSpentPerIO;
-		this.numOfTimeInWating = numOfTimeInWating;
-		this.executionTime = executionTime;
-		this.fState = fState;
-		this.CPUBurstTime=CPUBurstTime;
-		this.memoryRequired=memoryRequired;
+	public int getAlocatedMemory() {
+		return alocatedMemory;
 	}
 
-
-
-	public int getCPUBurstTime() {
-	return CPUBurstTime;
-}
-
-
-
-public void setCPUBurstTime(int cPUBurstTime) {
-	CPUBurstTime = cPUBurstTime;
-}
-
-
-
-	public int getMemoryRequired() {
-	return memoryRequired;
-}
-
-
-
-public void setMemoryRequired(int memoryRequired) {
-	this.memoryRequired = memoryRequired;
-}
+	public void setAlocatedMemory(int alocatedMemory) {
+		this.alocatedMemory = alocatedMemory;
+	}
 
 
 
 	enum processFinalStatus{
-		KILLED, TERMINATED;
+		KILLED, TERMINATED, READY, WAITING, RUNNING;
 		
 	}
-	enum taskValue{
-		CPU,IO,MEMORY;
+
+
+
+	@Override
+	public int compareTo(Process o) {
+		return getNextBurst() >= o.getNextBurst() ? 1:-1;
+
 	}
 }

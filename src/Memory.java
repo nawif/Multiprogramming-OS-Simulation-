@@ -4,31 +4,28 @@ import java.util.*;
 public class Memory {
 	private final int MAX_SIZE=192;
 	private int alocatedMemorySize;
-	private Queue<Process> readyQueue;
-	private Queue<Process> waitQueue;
+	private Queue<Process> readyQueue = new PriorityQueue<>();
 	
-	public Memory(List<Process> unsortedProcesses) {
-		shortestJobFirst(unsortedProcesses);
+	public Memory(int osSize) {
+		alocatedMemorySize=osSize;
 	}
 
-	private void shortestJobFirst(List<Process> unsortedProcesses) {
-		unsortedProcesses.sort((p1, p2) -> {
-			return p1.getCPUBurstTime() < p2.getCPUBurstTime() ? 1:-1;
-		});
-		addToReadyQueue(unsortedProcesses);
-	}
 
-	private void addToReadyQueue(List<Process> unsortedProcesses) {
-		for (Process process : unsortedProcesses) {
-			if(canAdd(process.getMemoryRequired())) {
-				readyQueue.add(process);
-				unsortedProcesses.remove(process);
-			}
+	public void addToReadyQueue(Process p1) {
+		readyQueue.add(p1);
+		p1.setAlocatedMemory(p1.getAlocatedMemory()+p1.getNextMemory().getSecond());
+		alocatedMemorySize+=p1.getAlocatedMemory();
+		p1.deleteTask(p1.getNextMemory() );
+	}
+	public void getCpus() {
+		System.out.println("CPU \t RAM");
+		for (Process process : readyQueue) {
+			System.out.println(process.getNextBurst()+" \t "+process.getNextMemory().getSecond());
 		}
 	}
 
-	private boolean canAdd(int jobSize) {
-		return (MAX_SIZE*0.9 <= alocatedMemorySize + jobSize);
+	public boolean canAdd(int jobSize) {
+		return (MAX_SIZE*0.9 >= alocatedMemorySize + jobSize);
 	}
 	
 }
