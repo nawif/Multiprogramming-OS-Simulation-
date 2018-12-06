@@ -1,8 +1,8 @@
 
 public class CPU {
-	public void RunProcess(Process p){
+	public void RunTask(int p){
 		try {
-			Thread.sleep(p.getExecutionTime());
+			Thread.sleep(p);
 //			p.ge
 			
 		} catch (InterruptedException e) {

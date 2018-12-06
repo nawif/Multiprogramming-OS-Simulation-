@@ -39,6 +39,10 @@ public class Process implements Comparable<Process> {
 		return 0;
 	}
 	
+	public Pair<String, Integer> getNextTask(){
+		return tasks.peek();
+	}
+	
 	public void deleteTask(Pair<String, Integer> task) {
 		tasks.remove(task);
 	}
@@ -177,16 +181,21 @@ public void setpId(int pId) {
 		return alocatedMemory;
 	}
 
-	public void setAlocatedMemory(int alocatedMemory) {
-		this.alocatedMemory = alocatedMemory;
+	public boolean setAlocatedMemory(int alocatedMemory) {
+		if(this.alocatedMemory + alocatedMemory < 0) {
+			System.out.println("Process id: "+this.pId +" alocated: "+ (this.alocatedMemory + alocatedMemory));
+			return false;
+		}
+		this.alocatedMemory += alocatedMemory;
+		return true;
+	}
+	
+	public boolean validateAlocatedMem(int memoryToBeAdded) {
+		return (alocatedMemory + memoryToBeAdded >= 0);
 	}
 
 
 
-	enum processFinalStatus{
-		KILLED, TERMINATED, READY, WAITING, RUNNING;
-		
-	}
 
 
 
