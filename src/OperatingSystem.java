@@ -80,7 +80,7 @@ public class OperatingSystem {
 			stringBuilder.append("\n");
 			cpuTime+= process.getTotTimeSpentInCPU();
 		}
-		stringBuilder.append("CPU Utilization: " +((double)(cpuTime)/(osTotalRunTime))*100 );
+		stringBuilder.append("CPU Utilization: %" +((double)(cpuTime)/(osTotalRunTime))*100 );
 	      BufferedWriter bw = null;
 	 	 File file = new File("output.txt");
 	      FileWriter fw;
