@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Memory {
 	private final int MAX_SIZE = 100;
-	private int alocatedMemorySize;
+	public static int alocatedMemorySize;
 	static Queue<Process> readyQueue = new PriorityQueue<>();
 
 	public Memory(int osSize) {
@@ -13,14 +13,11 @@ public class Memory {
 	}
 
 	public void addToReadyQueue(Process p1) {
+		p1.setfState(processFinalStatus.READY);
 		System.out.println("Process id: " + p1.getpId());
 		freeAlocatedMem(p1);
 		Pair<String, Integer> nextMem = p1.getNextMemory();
-//		if (nextMem == null)
-//			return;
-//		else
-			p1.setAlocatedMemory( nextMem.getSecond() );
-
+		p1.setAlocatedMemory( nextMem.getSecond() );
 		alocatedMemorySize += p1.getAlocatedMemory();
 		p1.deleteTask(p1.getNextMemory());
 		readyQueue.add(p1);
@@ -54,6 +51,7 @@ public class Memory {
 
 	public void addProcess(Process p) {
 		System.out.println("addProcess: " + p.getpId());
+		p.setfState(processFinalStatus.READY);
 		readyQueue.add(p);
 	}
 

@@ -4,11 +4,11 @@ public class Process implements Comparable<Process> {
 
 	private int pId; //Process ID
 	private String pName; //Program name
-	private long timeLoadedIntoCPU; // When it was loaded into the ready queue.
-	private int numOfTimeInCpu; //Number of times it was in the CPU
+	private long timeLoadedIntoReadyQueue; // When it was loaded into the ready queue.
+	private int inCpuCounter; //Number of times it was in the CPU
 	private long totTimeSpentInCPU; //Total time spent in the CPU
-	private int numOfTimePerCPU; //Number of times it performed an IO. 
-	private long totTimeSpentPerIO; //Total time spent in performing IO
+	private int inIOCounter; //Number of times it performed an IO. 
+	private long totTimeSpentInIO; //Total time spent in performing IO
 	private int numOfTimeInWating; //Number of times it was waiting for memory 
 	private long executionTime; //Time it terminated or was killed
 	private processFinalStatus fState; //Its final state Killed or Terminated
@@ -21,6 +21,7 @@ public class Process implements Comparable<Process> {
 		pId=id;
 		this.tasks=tasks;
 		setAlocatedMemory(0);
+		fState=processFinalStatus.WAITING;
 	}
 	
 	public Pair<String, Integer> getNextMemory() {
@@ -54,7 +55,7 @@ public class Process implements Comparable<Process> {
 			str.append(pair.getSecond());
 			str.append("\t");
 		}
-		return pId+"\t"+str.toString();
+		return pId+" - "+fState+"\t"+str.toString();
 	}
 	
 	public int getpId() {
@@ -69,14 +70,14 @@ public class Process implements Comparable<Process> {
 
 
 	
-	public long getTimeLoadedIntoCPU() {
-		return timeLoadedIntoCPU;
+	public long getTimeLoadedIntoReadyQueue() {
+		return timeLoadedIntoReadyQueue;
 	}
 
 
 
-	public int getNumOfTimeInCpu() {
-		return numOfTimeInCpu;
+	public int getInCpuCounter() {
+		return inCpuCounter;
 	}
 
 
@@ -87,14 +88,14 @@ public class Process implements Comparable<Process> {
 
 
 
-	public int getNumOfTimePerCPU() {
-		return numOfTimePerCPU;
+	public int getInIOCounter() {
+		return inIOCounter;
 	}
 
 
 
 	public long getTotTimeSpentPerIO() {
-		return totTimeSpentPerIO;
+		return totTimeSpentInIO;
 	}
 
 
@@ -129,38 +130,38 @@ public void setpId(int pId) {
 
 
 
-	public void setTimeLoadedIntoCPU(long timeLoadedIntoCPU) {
-		this.timeLoadedIntoCPU = timeLoadedIntoCPU;
+	public void setTimeLoadedIntoReadyQueue(long timeLoadedIntoCPU) {
+		this.timeLoadedIntoReadyQueue = timeLoadedIntoCPU;
 	}
 
 
 
-	public void setNumOfTimeInCpu(int numOfTimeInCpu) {
-		this.numOfTimeInCpu = numOfTimeInCpu;
+	public void increaseNumOfTimeInCpu() {
+		this.inCpuCounter++;
 	}
 
 
 
 	public void setTotTimeSpentInCPU(long totTimeSpentInCPU) {
-		this.totTimeSpentInCPU = totTimeSpentInCPU;
+		this.totTimeSpentInCPU += totTimeSpentInCPU;
 	}
 
 
 
-	public void setNumOfTimePerCPU(int numOfTimePerCPU) {
-		this.numOfTimePerCPU = numOfTimePerCPU;
+	public void increaseInIOCounter() {
+		this.inIOCounter++;
 	}
 
 
 
-	public void setTotTimeSpentPerIO(long totTimeSpentPerIO) {
-		this.totTimeSpentPerIO = totTimeSpentPerIO;
+	public void setTotTimeSpentInIO(long totTimeSpentPerIO) {
+		this.totTimeSpentInIO += totTimeSpentPerIO;
 	}
 
 
 
-	public void setNumOfTimeInWating(int numOfTimeInWating) {
-		this.numOfTimeInWating = numOfTimeInWating;
+	public void increaseNumOfTimeInWating() {
+		this.numOfTimeInWating++;
 	}
 
 
@@ -172,6 +173,10 @@ public void setpId(int pId) {
 
 
 	public void setfState(processFinalStatus fState) {
+		if(fState == processFinalStatus.READY) {
+			if( timeLoadedIntoReadyQueue == 0 )
+				timeLoadedIntoReadyQueue=System.currentTimeMillis();
+		}
 		this.fState = fState;
 	}
 
